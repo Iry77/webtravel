@@ -1,10 +1,9 @@
 from django.db import models
 
 # Create your models here.
-
 class Ville(models.Model) :
     #IDVille est une clé primaire auto-incrementée
-    IDVille = models.AutoField(primary_key =True)
+    IDVille = models.AutoField(primary_key = True)
 
     #nomVille est une chaine de caractère
     NomVille = models.CharField(max_length = 50)
@@ -14,9 +13,9 @@ class Ville(models.Model) :
 
     #une méthide de type, "tostring"
     def __str__(self) -> str :
-        return self.NomVille + "("+ self.NomPays +")"
+        return self.NomVille + "(" + self.NomPays + ")"
 
-Class Voyage(models.Model):
+class Voyage(models.Model) :
     #IDVoyage est une clé primaire auto-incrementée
     IDVoyage = models.AutoField(primary_key =True)
 
@@ -28,4 +27,4 @@ Class Voyage(models.Model):
 
     #une méthide de type, "tostring"
     def __str__(self) -> str :
-        return self.Titre + "("+ self.Prix +")"
+        return self.Titre + '(' + str(self.Prix) + ')'
