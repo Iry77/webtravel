@@ -14,4 +14,18 @@ class Ville(models.Model) :
 
     #une méthide de type, "tostring"
     def __str__(self) -> str :
-        return self.NomVille
+        return self.NomVille + "("+ self.NomPays +")"
+
+Class Voyage(models.Model):
+    #IDVoyage est une clé primaire auto-incrementée
+    IDVoyage = models.AutoField(primary_key =True)
+
+    #Titre est une chaine de caractère
+    Titre = models.CharField(max_length = 50)
+
+    #Le prix est un decimal, maximum 8 chiffres dont 2 decimales
+    Prix = models.DecimalField(max_digits = 8, decimal_places = 2)
+
+    #une méthide de type, "tostring"
+    def __str__(self) -> str :
+        return self.Titre + "("+ self.Prix +")"
