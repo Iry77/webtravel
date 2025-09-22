@@ -46,7 +46,7 @@ class Etape (models.Model):
     Nb_Jours = models.CharField(max_length = 50)
 
     #Une méthode de type "toString"
-    def _str_(self) -> str:
+    def _str_(self) -> str :
     vil = self.ville
     voy = self.voyage
-    return vil.NomVille + 'est une étape de+ voy. Titre + ('+ self.Nb_Jours +' jour)'
+    return vil.NomVille + 'est une étape de' + voy. Titre +'('+ self.Nb_Jours +' jour)'
