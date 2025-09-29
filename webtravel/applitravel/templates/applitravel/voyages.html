@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Les voyages</title>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div>
+                    <a href="/voyages/">Les voyages</a>
+                </div>
+                <div>
+                    <a href="/villes/">Les villes</a>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <h2>Voici les {{voyages|length}} voyages que nous vous proposons</h2>
+            <ul>
+                {% for voy in voyages %}
+                    <li>{{voy.IDVoyage}} {{voy.Titre}} {{voy.Prix}} euro</li>
+                {% endfor %}
+            </ul>
+        </main>
+        <footer>
+            (c) Mon agence de voyages
+        </footer>
+    </body>
+</html>

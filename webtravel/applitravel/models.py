@@ -47,6 +47,6 @@ class Etape (models.Model):
 
     #Une méthode de type "toString"
     def _str_(self) -> str :
-    vil = self.ville
-    voy = self.voyage
-    return vil.NomVille + 'est une étape de' + voy. Titre +'('+ self.Nb_Jours +' jour)'
+        vil = self.ville
+        voy = self.voyage
+        return vil.NomVille + 'est une étape de' + voy. Titre +'('+ self.Nb_Jours +' jour)'

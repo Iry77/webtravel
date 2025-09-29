@@ -17,7 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from applitravel import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('voyages/', views.voyages),
+    path('villes/', views.villes),
 ]
