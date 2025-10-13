@@ -8,7 +8,7 @@ Les voyages
     <h2>Voici les {{voyages|length}} voyages que nous vous proposons</h2>
     <ul>
         {% for voy in voyages %}
-        <li>{{voy.IDVoyage}} {{voy.Titre}} {{voy.Prix}} €</li>
+        <li>{{voy.IDVoyage}} {{voy.Titre}} {{voy.Prix}} € | <a href="{{voy.IDVoyage}}">Détail</a></li>
         {% endfor %}
     </ul>
 {% endblock%}

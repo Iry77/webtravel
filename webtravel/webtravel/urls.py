@@ -23,4 +23,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('voyages/', views.voyages),
     path('villes/', views.villes),
+    path('voyages/<int:voyage_id>', views.voyage)
 ]
