@@ -1,0 +1,18 @@
+h2{
+    background-color: aqua;
+}
+
+.Site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.Site-content {
+    flex: 1;
+}
+
+img{
+    height: 50px;
+    width: 50px;
+}
