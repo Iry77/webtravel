@@ -23,5 +23,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('voyages/', views.voyages),
     path('villes/', views.villes),
-    path('voyages/<int:voyage_id>', views.voyage)
+    path('voyages/<int:voyage_id>', views.voyage),
+    path('villes/add', views.formulaireCreationVille),
+    path('villes/create', views.CreerVille),
+    path('voyages/add', views.formulaireCreationVoyage),
+    path('voyages/create', views.CreerVoyage),
 ]

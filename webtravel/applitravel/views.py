@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from applitravel.models import Voyage
-from applitravel.models import Ville
-from applitravel.models import Etape
+from applitravel.models import Voyage, Ville, Etape
+from applitravel.forms import VilleForm, VoyageForm
 
 # Create your views here.
 def voyages(request) :
@@ -41,3 +40,40 @@ def voyage(request, voyage_id) :
         'etapes': lesEtapes
         },
     )
+
+def formulaireCreationVille(request) : 
+    form = VilleForm()
+    return render(
+        request,
+        'applitravel/formulaireCreationVille.html', {'form' : form}
+    )
+
+def CreerVille(request) :
+    form = VilleForm(request.POST)
+    if form.is_valid():
+        nomV = form.cleaned_data['NomVille']
+        form.save()
+    return render(
+        request,
+        'applitravel/traitementFormulaireCreationVille.html',
+        {"nom" : nomV}
+    )
+
+def formulaireCreationVoyage(request) : 
+    form = VoyageForm()
+    return render(
+        request,
+        'applitravel/formulaireCreationVoyage.html', {'form' : form}
+    )
+
+def CreerVoyage(request) : 
+    form = VoyageForm(request.POST)
+    if form.is_valid():
+        titre = form.cleaned_data['Titre']
+        form.save()
+    return render(
+        request,
+        'applitravel/traitementFormulaireCreationVoyage.html',
+        {"Titre" : titre}
+    )
+

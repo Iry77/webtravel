@@ -1,0 +1,14 @@
+{% extends 'applitravel/base.html' %}
+
+{% block title %}
+Création d'une voyage
+{% endblock %}
+
+{% block main %}
+    <h2>Création d'un voyage</h2>
+    <form action="/voyages/create" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-btn-primary">Créer</button>
+    </form>
+{% endblock %}
