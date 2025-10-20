@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from applitravel.models import Voyage, Ville, Etape
-from applitravel.forms import VilleForm, VoyageForm
+from applitravel.forms import VilleForm, VoyageForm, EtapeForm
 
 # Create your views here.
 def voyages(request) :
@@ -32,13 +32,17 @@ def voyage(request, voyage_id) :
     # récuperation des etapes filtrer par voyage
     lesEtapes = Etape.objects.filter(voyage = voyage_id)
 
+    # recuperer toutes les villes
+    lesVilles = Ville.objects.all()
+
     #On retourne l'emplacement du template et le voyage recuperer dans la base de données
     return render(
         request,
         "applitravel/voyage.html",
         {'voyage': leVoyage,
-        'etapes': lesEtapes
-        },
+        'etapes': lesEtapes,
+        'lesVilles' : lesVilles,
+        }
     )
 
 def formulaireCreationVille(request) : 
@@ -77,3 +81,43 @@ def CreerVoyage(request) :
         {"Titre" : titre}
     )
 
+def ajouterEtape (request, IDVoyage) : # on récupère le formulaire
+    form = EtapeForm(request.POST)
+    #on teste la validité du formulaire
+    if form.is_valid() :
+        #on récupère les éléments du formulaire
+        vil = form.cleaned_data['ville']
+        nbjours = form.cleaned_data['Nb_Jours']
+        voy = Voyage.objects.get(IDVoyage = IDVoyage) 
+        lesEtapes = Etape.objects.filter(voyage = IDVoyage) 
+        lesEtapesduvoyage = ((ligne.ville) for ligne in lesEtapes)
+
+        #on supprime l'étape si elle existe déjà
+        if vil in lesEtapesduvoyage :
+            eta = Etape.objects.filter(voyage = voy, ville = vil) 
+            eta.delete()
+
+        # création de la nouvelle étape et remplissage des attributs newEtape = Etape()
+        newEtape.ville = vil
+        newEtape.voyage = voy
+        newEtape.Nb_Jours = nbjours
+        newEtape.save()
+
+    # récupération du voyage dont l'identifiant a été
+    # passé en paramètre (voyage_id)
+    leVoyage = Voyage.objects.get(IDVoyage = IDVoyage)
+
+    # récupération des étapes constituant le voyage
+    lesEtapes = Etape.objects.all().filter(voyage = leVoyage)
+
+    # on récupère toutes les villes
+    lesVilles
+    Ville.objects.all()
+    return render(
+        request,
+        'applitravel/voyage.html',
+        {'voyage': leVoyage, 
+        'lesEtapes' : lesEtapes, 
+        'lesVilles': lesvilles
+        },
+    )

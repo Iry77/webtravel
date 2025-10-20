@@ -28,4 +28,5 @@ urlpatterns = [
     path('villes/create', views.CreerVille),
     path('voyages/add', views.formulaireCreationVoyage),
     path('voyages/create', views.CreerVoyage),
+    path('voyages/<int:IDVoyage>/addVoyage', views.ajouterEtape)
 ]
