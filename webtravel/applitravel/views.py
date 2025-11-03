@@ -121,3 +121,20 @@ def ajouterEtape (request, IDVoyage) : # on récupère le formulaire
         'lesVilles': lesVilles,
         },
     )
+
+def supprimerVoyage(request, voyage_id):
+    # Recuperer le voyage
+    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
+
+    #Supprimer le voyage
+    leVoyage.delete()
+
+    # Récupérer la liste de toutes les voyages
+    lesVoyages = Voyage.objects.all()
+
+    # retourne l'emplacement du template, calcul le voyage ainsi que le request
+    return render(
+        request,
+        'applitravel/voyages.html',
+        {'voyages': lesVoyages},
+    )
