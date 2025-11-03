@@ -40,7 +40,7 @@ def voyage(request, voyage_id) :
         request,
         "applitravel/voyage.html",
         {'voyage': leVoyage,
-        'etapes': lesEtapes,
+        'lesEtapes': lesEtapes,
         'lesVilles' : lesVilles,
         }
     )

@@ -8,7 +8,7 @@ Le détail d'un voyage
     <h2>Voici le voyage que nous vous proposons</h2>
     <p> {{voyage.Titre}} pour {{voyage.Prix}} €</p>
     <h4 class="mt-4">Etapes du voyage</h4>
-    {% if etapes %}
+    {% if lesEtapes %}
     <table class="table table-striped table-borderd mt-3">
         <thead class="table-dark">
             <tr>
@@ -17,7 +17,7 @@ Le détail d'un voyage
             </tr>
         </thead>
         <tbody>
-            {% for etape in etapes %}
+            {% for etape in lesEtapes %}
             <tr>
                 <td>{{ etape.ville }}</td>
                 <td>{{ etape.Nb_Jours }}</td>
