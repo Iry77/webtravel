@@ -97,7 +97,8 @@ def ajouterEtape (request, IDVoyage) : # on récupère le formulaire
             eta = Etape.objects.filter(voyage = voy, ville = vil) 
             eta.delete()
 
-        # création de la nouvelle étape et remplissage des attributs newEtape = Etape()
+        # création de la nouvelle étape et remplissage des attributs 
+        newEtape = Etape()
         newEtape.ville = vil
         newEtape.voyage = voy
         newEtape.Nb_Jours = nbjours
@@ -111,13 +112,12 @@ def ajouterEtape (request, IDVoyage) : # on récupère le formulaire
     lesEtapes = Etape.objects.all().filter(voyage = leVoyage)
 
     # on récupère toutes les villes
-    lesVilles
-    Ville.objects.all()
+    lesVilles = Ville.objects.all()
     return render(
         request,
         'applitravel/voyage.html',
         {'voyage': leVoyage, 
         'lesEtapes' : lesEtapes, 
-        'lesVilles': lesvilles
+        'lesVilles': lesVilles,
         },
     )
