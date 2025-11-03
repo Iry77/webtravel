@@ -138,3 +138,24 @@ def supprimerVoyage(request, voyage_id):
         'applitravel/voyages.html',
         {'voyages': lesVoyages},
     )
+
+def afficherFormulaireModiﬁcationVoyage(request, voyage_id):
+    # Recuperer le voyage
+    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
+
+    # retourne l'emplacement du template, calcul le voyage ainsi que le request
+    return render(
+        request,
+        'applitravel/formulaireModiﬁcationVoyage.html',
+        {'voyage': leVoyage},
+    )
+
+def modifierVoyage(request, voyage_id):
+    # Recuperer le voyage
+    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
+
+    #on recupere le formulaire et on instancie leVoyage
+    form = VoyageForm(request.POST, instance = leVoyage)
+
+    if form.is_valid():
+        form.save()

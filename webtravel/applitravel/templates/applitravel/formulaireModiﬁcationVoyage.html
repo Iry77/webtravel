@@ -1,0 +1,21 @@
+{% extends 'applitravel/base.html' %}
+
+{% block title %}
+Modification d'un voyage
+{% endblock %}
+
+{% block main %}
+    <h2>Modification d'un voyage</h2>
+    <form action="/voyages/{{voyage.IDVoyage}}/updated" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_voyage" class="form-Label">Nom du voyage</label>
+            <input type="text" name="Titre" class="form_control" maxlength="50" required id="id_nomVoyage" value="{{voyage.Titre}}">
+        </div>
+        <div class="mb-3">
+            <label for="id_prix" class="form-Label">Prix du voyage</label>
+            <input type="text" name="Prix" min="0" step="0.1" class="form_control" required id="id_prix" value="{{voyage.Prix}}">
+        </div>
+        <button type="submit" class="btn-btn-primary">Modifier</button>
+    </form>
+{% endblock %}

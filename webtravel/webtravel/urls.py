@@ -30,4 +30,6 @@ urlpatterns = [
     path('voyages/create', views.CreerVoyage),
     path('voyages/<int:IDVoyage>/addVoyage', views.ajouterEtape),
     path('voyages/<int:voyage_id>/delete', views.supprimerVoyage),
+    path('voyages/<int:voyage_id>/update', views.afficherFormulaireModiﬁcationVoyage),
+    path('voyages/<int:voyage_id>/updated/', views.modifierVoyage),
 ]
