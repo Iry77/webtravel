@@ -159,3 +159,55 @@ def modifierVoyage(request, voyage_id):
 
     if form.is_valid():
         form.save()
+    
+    #aller chercher dans la base le voyage modifer
+    return render(
+        request,
+        'applitravel/traitementFormulaireModificationVoyage.html',
+        {'voyage': leVoyage},
+    )
+
+def supprimerVille(request, ville_id):
+    # Recuperer le ville
+    laVille = Ville.objects.get(IDVille = ville_id)
+
+    #Supprimer le ville
+    laVille.delete()
+
+    # Récupérer la liste de toutes les villes
+    lesVilles = Ville.objects.all()
+
+    # retourne l'emplacement du template, calcul la ville ainsi que le request
+    return render(
+        request,
+        'applitravel/villes.html',
+        {'villes': lesVilles},
+    )
+
+def afficherFormulaireModiﬁcationVille(request, ville_id):
+    # Recuperer la ville
+    laVille = Ville.objects.get(IDVille = ville_id)
+
+    # retourne l'emplacement du template, calcul le ville ainsi que le request
+    return render(
+        request,
+        'applitravel/formulaireModiﬁcationVille.html',
+        {'ville': laVille},
+    )
+
+def modifierVille(request, ville_id):
+    # Recuperer la ville
+    laVille = Ville.objects.get(IDVille = ville_id)
+
+    #on recupere le formulaire et on instancie laVille
+    form = VilleForm(request.POST, instance = laVille)
+
+    if form.is_valid():
+        form.save()
+    
+    #aller chercher dans la base la ville modifer
+    return render(
+        request,
+        'applitravel/traitementFormulaireModificationVille.html',
+        {'ville': laVille},
+    )

@@ -8,7 +8,10 @@ Les voyages
     <h2>Voici les {{villes|length}} villes que vous pouvez visiter</h2>
         <ul>
             {% for vil in villes %}
-                <li>{{vil.IDVille}} {{vil.NomVille}} ({{vil.NomPays}}) </li>
+                <li>{{vil.IDVille}} {{vil.NomVille}} ({{vil.NomPays}}) |
+                    <a href="{{vil.IDVille}}/update">Modifier</a>
+                    <a href="{{vil.IDVille}}/delete">supprimer</a>
+                </li>
             {% endfor %}
         </ul>
 {% endblock%}

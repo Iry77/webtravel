@@ -31,5 +31,8 @@ urlpatterns = [
     path('voyages/<int:IDVoyage>/addVoyage', views.ajouterEtape),
     path('voyages/<int:voyage_id>/delete', views.supprimerVoyage),
     path('voyages/<int:voyage_id>/update', views.afficherFormulaireModiﬁcationVoyage),
-    path('voyages/<int:voyage_id>/updated/', views.modifierVoyage),
+    path('voyages/<int:voyage_id>/updated', views.modifierVoyage),
+    path('villes/<int:ville_id>/delete', views.supprimerVille),
+    path('villes/<int:ville_id>/update', views.afficherFormulaireModiﬁcationVille),
+    path('villes/<int:ville_id>/updated', views.modifierVille),
 ]

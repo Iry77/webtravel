@@ -1,0 +1,21 @@
+{% extends 'applitravel/base.html' %}
+
+{% block title %}
+Modification d'une ville
+{% endblock %}
+
+{% block main %}
+    <h2>Modification d'une ville</h2>
+    <form action="/villes/{{ville.IDVille}}/updated" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_ville" class="form-Label">Nom de la ville</label>
+            <input type="text" name="NomVille" class="form_control" maxlength="50" required id="id_nomVille" value="{{ville.NomVille}}">
+        </div>
+        <div class="mb-3">
+            <label for="id_pays" class="form-Label">Nom du pays</label>
+            <input type="text" name="NomPays" class="form_control" maxlength="50" required id="id_nomPays" value="{{ville.NomPays}}">
+        </div>
+        <button type="submit" class="btn-btn-primary">Modifier</button>
+    </form>
+{% endblock %}
