@@ -21,6 +21,7 @@ Le détail d'un voyage
             <tr>
                 <td>{{ etape.ville }}</td>
                 <td>{{ etape.Nb_Jours }}</td>
+                <a href="/voyages/{{voyage.IDVoyage}}/deleteEtape/{{uneetape.IDEtape}}">Supprimer</a>
             </tr>
             {% endfor %}
         </tbody>

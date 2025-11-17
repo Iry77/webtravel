@@ -10,7 +10,7 @@ Les voyages
             {% for vil in villes %}
                 <li>{{vil.IDVille}} {{vil.NomVille}} ({{vil.NomPays}}) |
                     <a href="{{vil.IDVille}}/update">Modifier</a>
-                    <a href="{{vil.IDVille}}/delete">supprimer</a>
+                    <a href="{% url 'supprimer_ville' vil.IDVille %}">supprimer</a>
                 </li>
             {% endfor %}
         </ul>

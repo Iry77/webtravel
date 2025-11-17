@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from applitravel.models import Voyage, Ville, Etape
 from applitravel.forms import VilleForm, VoyageForm, EtapeForm
+from django.urls import reverse
 
 # Create your views here.
 def voyages(request) :
@@ -178,11 +179,7 @@ def supprimerVille(request, ville_id):
     lesVilles = Ville.objects.all()
 
     # retourne l'emplacement du template, calcul la ville ainsi que le request
-    return render(
-        request,
-        'applitravel/villes.html',
-        {'villes': lesVilles},
-    )
+    return redirect('villes')
 
 def afficherFormulaireModiﬁcationVille(request, ville_id):
     # Recuperer la ville
@@ -211,3 +208,5 @@ def modifierVille(request, ville_id):
         'applitravel/traitementFormulaireModificationVille.html',
         {'ville': laVille},
     )
+
+# def supprimerEtapeDansVoyage(request, voyage_id, etape_id):

@@ -22,7 +22,7 @@ from applitravel import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('voyages/', views.voyages),
-    path('villes/', views.villes),
+    path('villes/', views.villes, name = 'villes'),
     path('voyages/<int:voyage_id>', views.voyage),
     path('villes/add', views.formulaireCreationVille),
     path('villes/create', views.CreerVille),
@@ -32,7 +32,8 @@ urlpatterns = [
     path('voyages/<int:voyage_id>/delete', views.supprimerVoyage),
     path('voyages/<int:voyage_id>/update', views.afficherFormulaireModiﬁcationVoyage),
     path('voyages/<int:voyage_id>/updated', views.modifierVoyage),
-    path('villes/<int:ville_id>/delete', views.supprimerVille),
+    path('villes/<int:ville_id>/delete', views.supprimerVille, name="supprimer_ville"),
     path('villes/<int:ville_id>/update', views.afficherFormulaireModiﬁcationVille),
     path('villes/<int:ville_id>/updated', views.modifierVille),
+    # path('voyages/<int:voyage_id>/deleteEtape/<int:etape_id>/', views.supprimerEtapeDansVoyage),
 ]
