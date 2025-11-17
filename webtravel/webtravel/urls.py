@@ -35,5 +35,5 @@ urlpatterns = [
     path('villes/<int:ville_id>/delete', views.supprimerVille, name="supprimer_ville"),
     path('villes/<int:ville_id>/update', views.afficherFormulaireModiﬁcationVille),
     path('villes/<int:ville_id>/updated', views.modifierVille),
-    # path('voyages/<int:voyage_id>/deleteEtape/<int:etape_id>/', views.supprimerEtapeDansVoyage),
+    path('voyages/<int:voyage_id>/deleteEtape/<int:etape_id>/delete', views.supprimerEtapeDansVoyage, name='supprimer_etape'),
 ]

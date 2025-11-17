@@ -209,4 +209,31 @@ def modifierVille(request, ville_id):
         {'ville': laVille},
     )
 
-# def supprimerEtapeDansVoyage(request, voyage_id, etape_id):
+def supprimerEtapeDansVoyage(request, voyage_id, etape_id):
+    # Recuperer l'etape
+    etape = Etape.objects.get(IDEtape = etape_id)
+
+    # Supprimer l'etape
+    etape.delete()
+
+    # Recuperer voyage
+    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
+
+    # Récupérer toutes les étapes concernant le voyage
+    lesEtapes = Etape.objects.all().filter(voyage = leVoyage)
+
+    # Refabriquer la liste des villes du voyage
+    lesVilles = Ville.objects.all()
+
+    return render(
+        request,
+        'applitravel/voyage.html',
+        {'voyage': leVoyage, 
+        'lesEtapes' : lesEtapes, 
+        'lesVilles': lesVilles,
+        },
+    )
+
+
+    
+
