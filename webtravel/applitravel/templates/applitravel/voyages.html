@@ -6,13 +6,21 @@ Les voyages
 
 {% block main %}
     <h2>Voici les {{voyages|length}} voyages que nous vous proposons</h2>
-    <ul>
-        {% for voy in voyages %}
-        <li>{{voy.IDVoyage}} {{voy.Titre}} {{voy.Prix}} € | 
+        <div>
+            {% for voy in voyages %}
+            <div>
+                <a href="/voyages/{{voyage.IDVoyage}}">
+                    <img src="{{MEDIA_URL}}{{voy.image}}" width="200" alt="Image de voyage" title="{{voy.Titre}}">
+            </div>
+        </div>
+        <div>
+            {{voy.Titre}}
+        </div>
+        <div>
             <a href="{{voy.IDVoyage}}">Détail</a>
             <a href="{{voy.IDVoyage}}/update">Modifier</a>
             <a href="{{voy.IDVoyage}}/delete">supprimer</a>
-        </li>
-        {% endfor %}
-    </ul>
+        </div>
+            {% endfor %}
+    </div>
 {% endblock%}
