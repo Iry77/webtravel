@@ -6,7 +6,7 @@ Création d'une voyage
 
 {% block main %}
     <h2>Création d'un voyage</h2>
-    <form action="/voyages/create" method="post">
+    <form enctype="multipart/form-data" action="/voyages/create" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn-btn-primary">Créer</button>

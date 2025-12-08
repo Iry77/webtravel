@@ -72,7 +72,7 @@ def formulaireCreationVoyage(request) :
     )
 
 def CreerVoyage(request) : 
-    form = VoyageForm(request.POST)
+    form = VoyageForm(request.POST, request.FILES)
     if form.is_valid():
         titre = form.cleaned_data['Titre']
         form.save()

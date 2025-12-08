@@ -26,7 +26,7 @@ class Voyage(models.Model) :
     Prix = models.DecimalField(max_digits = 8, decimal_places = 2)
 
     # l'image de presentation du voyage
-    image = models.ImageField(default= 'imagesVoyage/default.jpg', upload_to='imagesVoyages/')
+    image = models.ImageField(default= 'imagesVoyage/default.jpg', upload_to='imagesVoyage/')
     #une méthide de type, "tostring"
     def __str__(self) -> str :
         return self.Titre + '(' + str(self.Prix) + ')'
