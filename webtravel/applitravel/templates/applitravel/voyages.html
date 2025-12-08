@@ -6,21 +6,31 @@ Les voyages
 
 {% block main %}
     <h2>Voici les {{voyages|length}} voyages que nous vous proposons</h2>
-        <div>
+        <div class="container">
             {% for voy in voyages %}
-            <div>
-                <a href="/voyages/{{voyage.IDVoyage}}">
-                    <img src="{{MEDIA_URL}}{{voy.image}}" width="200" alt="Image de voyage" title="{{voy.Titre}}">
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <a href="/voyages/{{voy.IDVoyage}}">
+                        <img src="{{ MEDIA_URL }}{{ voy.image }}" width="200" alt="Image de voyage" title="{{voy.Titre}}">
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <h3>{{voy.Titre}}</h3>
+                    <p>Prix : {{voy.Prix}} €</p>
+                    <div>
+                        <a href="/voyages/{{voy.IDVoyage}}" class="btn btn-info">Détail</a>
+                        
+                        {% if user.is_staff %}
+                            <a href="/voyages/{{voy.IDVoyage}}/update" class="btn btn-warning"><i class="bi bi-pencil-fill"></i> Modifier</a>
+                            <a href="/voyages/{{voy.IDVoyage}}/delete" class="btn btn-danger"><i class="bi bi-trash"></i> Supprimer</a>
+                        {% endif %}
+
+                        {% if user.is_authenticated and not user.is_staff %}
+                            <a href="#" class="btn btn-success">Ajouter au panier</a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
+            {% endfor %}
         </div>
-        <div>
-            {{voy.Titre}}
-        </div>
-        <div>
-            <a href="{{voy.IDVoyage}}">Détail</a>
-            <a href="{{voy.IDVoyage}}/update"><i class="bi bi-pencil-fill"></i></a>
-            <a href="{{voy.IDVoyage}}/delete"><i class="bi bi-trash"></i></a>
-        </div>
-        {% endfor %}
-    </div>
 {% endblock%}

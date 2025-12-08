@@ -1,0 +1,27 @@
+{% extends 'applitravel/base.html' %}
+
+{% block title %}
+Connexion
+{% endblock %}
+
+{% block main %}
+    <form id="login-form" method="post" action="/connexion/">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_username">Identifiant</label>
+            <input type="text" class="form-control" id="id_username" name="username" placeholder="Votre Identifiant">
+        </div>
+        <div class="mb-3">
+            <label for="id_password">Mot de passe</label>
+            <input type="password" class="form-control" id="id_password" name="password" placeholder="Votre mot de passe"> 
+        </div>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+    <div>
+        <small>Pas encore inscrit ? <a href="/register/">S'inscrire</a>
+        <br>
+        <a href="/password_reset">Mot de passe oublié ?</a>
+        </small>
+
+    </div>
+{% endblock %}

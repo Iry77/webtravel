@@ -7,14 +7,17 @@ Le détail d'un voyage
 {% block main %}
     <h2>Voici le voyage que nous vous proposons</h2>
     <p> {{voyage.Titre}} pour {{voyage.Prix}} €</p>
+    
     <h4 class="mt-4">Etapes du voyage</h4>
     {% if lesEtapes %}
-    <table class="table table-striped table-borderd mt-3">
+    <table class="table table-striped table-bordered mt-3">
         <thead class="table-dark">
             <tr>
                 <th>Ville</th>
-                <th>nb jours</th>
+                <th>Nb jours</th>
+                {% if user.is_staff %}
                 <th>Modification</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -22,31 +25,40 @@ Le détail d'un voyage
             <tr>
                 <td>{{ etape.ville }}</td>
                 <td>{{ etape.Nb_Jours }}</td>
-                <td><a href="{% url 'supprimer_etape' voyage.IDVoyage etape.IDEtape %}"><i class="bi bi-trash"></i></a>
-                    <a href="/voyages/{{voyage.IDVoyage}}/update/{{etape.IDEtape}}"><i class="bi bi-pencil-fill"></i></a></td>
+                {% if user.is_staff %}
+                <td>
+                    <a href="{% url 'supprimer_etape' voyage.IDVoyage etape.IDEtape %}"><i class="bi bi-trash"></i></a>
+                    <a href="/voyages/{{voyage.IDVoyage}}/update/{{etape.IDEtape}}/"><i class="bi bi-pencil-fill"></i></a>
+                </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% else %}
-    <p> ras </p>
+    <p>Aucune étape définie.</p>
     {% endif %}
-    <h2>Ajouter une étape</h2>
-    <form action="/voyages/{{voyage.IDVoyage}}/addVoyage" method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="id_ville" class="form-Label">Etape</label>
-            <select name="ville" class="form-select" required id="id_ville">
-                <option selected disabled>Choisissez</option>
-                {% for vil in lesVilles %}
-                <option value="{{vil.IDVille}}">{{vil.NomVille}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="id_nbjours" class="form-Label"> Nombre de jours</label>
-            <input type="text" name="Nb_Jours" class="form_control" maxlength="10" required id="id_nbjours">
-        </div>
-        <button type="submit">Ajouter</button>
-    </form>
+
+    {% if user.is_staff %}
+    <div class="mt-4 p-3 bg-light border">
+        <h3>Ajouter une étape</h3>
+        <form action="/voyages/{{voyage.IDVoyage}}/addVoyage" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_ville" class="form-Label">Etape</label>
+                <select name="ville" class="form-select" required id="id_ville">
+                    <option selected disabled>Choisissez</option>
+                    {% for vil in lesVilles %}
+                    <option value="{{vil.IDVille}}">{{vil.NomVille}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="id_nbjours" class="form-Label"> Nombre de jours</label>
+                <input type="text" name="Nb_Jours" class="form_control" maxlength="10" required id="id_nbjours">
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
+    </div>
+    {% endif %}
 {% endblock%}
