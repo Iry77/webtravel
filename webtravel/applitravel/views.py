@@ -1,147 +1,173 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_GET, require_POST
 from applitravel.models import Voyage, Ville, Etape
 from applitravel.forms import VilleForm, VoyageForm, EtapeForm
-from django.contrib.auth.models import User
+
+# Décorateur des actions réservées au staff : un non-staff est renvoyé vers la liste des voyages
+staff_required = user_passes_test(lambda u: u.is_active and u.is_staff, login_url='/voyages/', redirect_field_name=None)
 
 # Vue des voyages (Accessible à tout le monde)
+@require_GET
 def voyages(request) :
-    lesVoyages = Voyage.objects.all()
-    user = request.user 
-    return render(
-        request,
-        'applitravel/voyages.html',
-        {'voyages': lesVoyages, 'user': user},
-    )
+    paginator = Paginator(Voyage.objects.order_by('IDVoyage'), 6)
+    page = paginator.get_page(request.GET.get('page'))
+    return render(request, 'applitravel/voyages.html', {'voyages': page})
 
 # Vue des villes (Sécurisée : Staff uniquement)
+@require_GET
+@staff_required
 def villes(request) :
-    if request.user.is_staff:
-        lesVilles = Ville.objects.all()
-        return render(request, 'applitravel/villes.html', {'villes': lesVilles})
-    else:
-        # Si non staff, on redirige vers les voyages ou login
-        return redirect('/voyages/')
+    paginator = Paginator(Ville.objects.order_by('NomVille'), 20)
+    page = paginator.get_page(request.GET.get('page'))
+    return render(request, 'applitravel/villes.html', {'villes': page})
 
 # Détail voyage (Accessible à tout le monde)
+@require_GET
 def voyage(request, voyage_id) :
-    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
-    lesEtapes = Etape.objects.filter(voyage = voyage_id)
-    lesVilles = Ville.objects.all()
+    leVoyage = get_object_or_404(Voyage, IDVoyage = voyage_id)
+    lesEtapes = Etape.objects.filter(voyage = leVoyage).select_related('ville')
     return render(
         request,
         "applitravel/voyage.html",
-        {'voyage': leVoyage, 'lesEtapes': lesEtapes, 'lesVilles' : lesVilles}
+        {'voyage': leVoyage, 'lesEtapes': lesEtapes, 'form': EtapeForm()}
     )
 
 # actions réservées au staff
 
+@require_GET
+@staff_required
 def formulaireCreationVille(request):
-    if not request.user.is_staff: return redirect('/voyages/') 
     form = VilleForm()
     return render(request, 'applitravel/formulaireCreationVille.html', {'form' : form})
 
+@require_POST
+@staff_required
 def CreerVille(request):
-    if not request.user.is_staff: return redirect('/voyages/') 
     form = VilleForm(request.POST)
     if form.is_valid():
-        nomV = form.cleaned_data['NomVille']
-        form.save()
-        return render(request, 'applitravel/traitementFormulaireCreationVille.html', {"nom" : nomV})
-    return redirect('/villes/add')
+        laVille = form.save()
+        messages.success(request, f"La ville {laVille.NomVille} a été créée.")
+        return redirect('villes')
+    return render(request, 'applitravel/formulaireCreationVille.html', {'form' : form}, status=400)
 
+@require_GET
+@staff_required
 def formulaireCreationVoyage(request):
-    if not request.user.is_staff: return redirect('/voyages/') 
     form = VoyageForm()
     return render(request, 'applitravel/formulaireCreationVoyage.html', {'form' : form})
 
+@require_POST
+@staff_required
 def CreerVoyage(request):
-    if not request.user.is_staff: return redirect('/voyages/') 
     form = VoyageForm(request.POST, request.FILES)
     if form.is_valid():
-        titre = form.cleaned_data['Titre']
-        form.save()
-        return render(request, 'applitravel/traitementFormulaireCreationVoyage.html', {"Titre" : titre})
-    return redirect('/voyages/add')
+        leVoyage = form.save()
+        messages.success(request, f"Le voyage {leVoyage.Titre} a été créé.")
+        return redirect('voyages')
+    return render(request, 'applitravel/formulaireCreationVoyage.html', {'form' : form}, status=400)
 
+@require_POST
+@staff_required
 def ajouterEtape(request, IDVoyage):
-    if not request.user.is_staff: return redirect('/voyages/') 
+    voy = get_object_or_404(Voyage, IDVoyage = IDVoyage)
     form = EtapeForm(request.POST)
     if form.is_valid() :
         vil = form.cleaned_data['ville']
-        nbjours = form.cleaned_data['Nb_Jours']
-        voy = Voyage.objects.get(IDVoyage = IDVoyage) 
-        
-        # Gestion doublons et création
-        existing_etape = Etape.objects.filter(voyage=voy, ville=vil)
-        if existing_etape.exists():
-            existing_etape.delete()
+        # Gestion doublons : une étape existante pour cette ville est remplacée
+        Etape.objects.filter(voyage=voy, ville=vil).delete()
+        Etape.objects.create(voyage=voy, ville=vil, Nb_Jours=form.cleaned_data['Nb_Jours'])
+        messages.success(request, f"L'étape {vil.NomVille} a été ajoutée.")
+    else:
+        messages.error(request, "L'étape n'a pas pu être ajoutée : vérifiez la ville et le nombre de jours.")
+    return redirect('voyage', voyage_id=IDVoyage)
 
-        newEtape = Etape()
-        newEtape.ville = vil
-        newEtape.voyage = voy
-        newEtape.Nb_Jours = nbjours
-        newEtape.save()
-
-    return redirect(f'/voyages/{IDVoyage}')
-
+@require_POST
+@staff_required
 def supprimerVoyage(request, voyage_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
+    leVoyage = get_object_or_404(Voyage, IDVoyage = voyage_id)
     leVoyage.delete()
-    return redirect('/voyages/')
+    messages.success(request, f"Le voyage {leVoyage.Titre} a été supprimé.")
+    return redirect('voyages')
 
-def afficherFormulaireModiﬁcationVoyage(request, voyage_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
-    return render(request, 'applitravel/formulaireModiﬁcationVoyage.html', {'voyage': leVoyage})
+@require_GET
+@staff_required
+def afficherFormulaireModificationVoyage(request, voyage_id):
+    leVoyage = get_object_or_404(Voyage, IDVoyage = voyage_id)
+    form = VoyageForm(instance = leVoyage)
+    return render(request, 'applitravel/formulaireModificationVoyage.html', {'voyage': leVoyage, 'form': form})
 
+@require_POST
+@staff_required
 def modifierVoyage(request, voyage_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
-    form = VoyageForm(request.POST, instance = leVoyage)
+    leVoyage = get_object_or_404(Voyage, IDVoyage = voyage_id)
+    form = VoyageForm(request.POST, request.FILES, instance = leVoyage)
     if form.is_valid():
         form.save()
-    return render(request, 'applitravel/traitementFormulaireModificationVoyage.html', {'voyage': leVoyage})
+        messages.success(request, f"Le voyage {leVoyage.Titre} a été modifié.")
+        return redirect('voyage', voyage_id=voyage_id)
+    return render(request, 'applitravel/formulaireModificationVoyage.html', {'voyage': leVoyage, 'form': form}, status=400)
 
+@require_POST
+@staff_required
 def supprimerVille(request, ville_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    laVille = Ville.objects.get(IDVille = ville_id)
+    laVille = get_object_or_404(Ville, IDVille = ville_id)
     laVille.delete()
+    messages.success(request, f"La ville {laVille.NomVille} a été supprimée.")
     return redirect('villes')
 
-def afficherFormulaireModiﬁcationVille(request, ville_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    laVille = Ville.objects.get(IDVille = ville_id)
-    return render(request, 'applitravel/formulaireModiﬁcationVille.html', {'ville': laVille})
+@require_GET
+@staff_required
+def afficherFormulaireModificationVille(request, ville_id):
+    laVille = get_object_or_404(Ville, IDVille = ville_id)
+    form = VilleForm(instance = laVille)
+    return render(request, 'applitravel/formulaireModificationVille.html', {'ville': laVille, 'form': form})
 
+@require_POST
+@staff_required
 def modifierVille(request, ville_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    laVille = Ville.objects.get(IDVille = ville_id)
+    laVille = get_object_or_404(Ville, IDVille = ville_id)
     form = VilleForm(request.POST, instance = laVille)
     if form.is_valid():
         form.save()
-    return render(request, 'applitravel/traitementFormulaireModificationVille.html', {'ville': laVille})
+        messages.success(request, f"La ville {laVille.NomVille} a été modifiée.")
+        return redirect('villes')
+    return render(request, 'applitravel/formulaireModificationVille.html', {'ville': laVille, 'form': form}, status=400)
 
+@require_POST
+@staff_required
 def supprimerEtapeDansVoyage(request, voyage_id, etape_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    etape = Etape.objects.get(IDEtape = etape_id)
+    etape = get_object_or_404(Etape, IDEtape = etape_id, voyage__IDVoyage = voyage_id)
     etape.delete()
-    return redirect(f'/voyages/{voyage_id}')
+    messages.success(request, "L'étape a été supprimée.")
+    return redirect('voyage', voyage_id=voyage_id)
 
-def afficherFormulaireModiﬁcationEtape(request, voyage_id, etape_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    leVoyage = Voyage.objects.get(IDVoyage = voyage_id)
-    lesEtapes = Etape.objects.all().filter(voyage = leVoyage)
-    lesVillesdEtape = lesEtapes.values_list('ville__IDVille')
-    lesVilles = Ville.objects.exclude(IDVille__in=lesVillesdEtape)
-    return render(request, 'applitravel/formulaireModiﬁcationEtape.html', {
-        'voyage': leVoyage, 'lesEtapes' : lesEtapes, 'lesVilles': lesVilles
+# Formulaire d'étape dont la liste de villes exclut celles déjà utilisées par les AUTRES étapes du voyage
+def _formulaireEtape(etape, data=None):
+    form = EtapeForm(data, instance=etape)
+    autresVilles = Etape.objects.filter(voyage=etape.voyage).exclude(IDEtape=etape.IDEtape).values_list('ville__IDVille')
+    form.fields['ville'].queryset = Ville.objects.exclude(IDVille__in=autresVilles)
+    return form
+
+@require_GET
+@staff_required
+def afficherFormulaireModificationEtape(request, voyage_id, etape_id):
+    etape = get_object_or_404(Etape, IDEtape = etape_id, voyage__IDVoyage = voyage_id)
+    return render(request, 'applitravel/formulaireModificationEtape.html', {
+        'voyage': etape.voyage, 'etape': etape, 'form': _formulaireEtape(etape)
     })
 
+@require_POST
+@staff_required
 def ModifierEtapeDansVoyage(request, voyage_id, etape_id):
-    if not request.user.is_staff: return redirect('/voyages/') 
-    etape = Etape.objects.get(IDEtape = etape_id)
-    form = EtapeForm(request.POST, instance=etape)
+    etape = get_object_or_404(Etape, IDEtape = etape_id, voyage__IDVoyage = voyage_id)
+    form = _formulaireEtape(etape, request.POST)
     if form.is_valid():
         form.save()
-    return redirect(f'/voyages/{voyage_id}')
+        messages.success(request, "L'étape a été modifiée.")
+        return redirect('voyage', voyage_id=voyage_id)
+    return render(request, 'applitravel/formulaireModificationEtape.html', {
+        'voyage': etape.voyage, 'etape': etape, 'form': form
+    }, status=400)
