@@ -1,30 +1,19 @@
-from django.shortcuts import render
-from django.contrib.auth import logout, login, authenticate
-from applitravel.models import Voyage
+from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
 
-# Create your views here.
-def connexion(request):
-    usr=request.POST['username']
-    pwd=request.POST['password']
-    user=authenticate(request, username=usr, password=pwd)
-    if user is not None:
-        login(request, user)
-        lesVoyages = Voyage.objects.all()
-        return render(
-            request, 
-            'applitravel/voyages.html', 
-            {'voyages': lesVoyages,
-             'user': user}
-        )
+# Inscription d'un nouveau client, connecté automatiquement après création du compte
+def inscription(request):
+    if request.user.is_authenticated:
+        return redirect('voyages')
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f"Bienvenue {user.username}, votre compte a été créé.")
+            return redirect('voyages')
     else:
-        return render(
-            request, 
-            'applicompte/login.html'
-        )
-    
-def deconnexion(request):
-    logout(request)
-    return render(
-        request,
-        'applicompte/logout.html'
-    )
+        form = UserCreationForm()
+    return render(request, 'applicompte/register.html', {'form': form})
