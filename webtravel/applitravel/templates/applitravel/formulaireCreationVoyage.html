@@ -1,14 +1,14 @@
 {% extends 'applitravel/base.html' %}
 
 {% block title %}
-Création d'une voyage
+Création d'un voyage
 {% endblock %}
 
 {% block main %}
     <h2>Création d'un voyage</h2>
-    <form enctype="multipart/form-data" action="/voyages/create" method="post">
+    <form enctype="multipart/form-data" action="{% url 'creer_voyage' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn-btn-primary">Créer</button>
+        <button type="submit" class="btn btn-primary">Créer</button>
     </form>
 {% endblock %}

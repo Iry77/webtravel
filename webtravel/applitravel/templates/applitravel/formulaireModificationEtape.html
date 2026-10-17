@@ -5,22 +5,11 @@ Modification d'une étape
 {% endblock %}
 
 {% block main %}
-<h2>Ajouter une étape</h2>
-    <form action="/voyages/{{voyage.IDVoyage}}/update/{{voyage.IDEtape}}" method="post">
+<h2>Modifier l'étape « {{ etape.ville.NomVille }} » du voyage {{ voyage.Titre }}</h2>
+    <form action="{% url 'modifier_etape' voyage.IDVoyage etape.IDEtape %}" method="post">
         {% csrf_token %}
-        <div class="mb-3">
-            <label for="id_ville" class="form-Label">Etape</label>
-            <select name="ville" class="form-select" required id="id_ville">
-                <option selected disabled>Choisissez</option>
-                {% for vil in lesVilles %}
-                <option value="{{vil.IDVille}}">{{vil.NomVille}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="id_nbjours" class="form-Label"> Nombre de jours</label>
-            <input type="text" name="Nb_Jours" class="form_control" maxlength="10" required id="id_nbjours">
-        </div>
-        <button type="submit">Modifier</button>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Modifier</button>
+        <a href="{% url 'voyage' voyage.IDVoyage %}" class="btn btn-secondary">Annuler</a>
     </form>
 {% endblock %}

@@ -5,32 +5,32 @@ Les voyages
 {% endblock %}
 
 {% block main %}
-    <h2>Voici les {{voyages|length}} voyages que nous vous proposons</h2>
+    <h2>Voici les {{voyages.paginator.count}} voyages que nous vous proposons</h2>
         <div class="container">
             {% for voy in voyages %}
             <div class="row mt-3">
                 <div class="col-md-4">
-                    <a href="/voyages/{{voy.IDVoyage}}">
-                        <img src="{{ MEDIA_URL }}{{ voy.image }}" width="200" alt="Image de voyage" title="{{voy.Titre}}">
+                    <a href="{% url 'voyage' voy.IDVoyage %}">
+                        {% if voy.image %}<img src="{{ voy.image.url }}" class="img-fluid rounded" alt="Image du voyage {{voy.Titre}}" title="{{voy.Titre}}">{% endif %}
                     </a>
                 </div>
                 <div class="col-md-8">
                     <h3>{{voy.Titre}}</h3>
                     <p>Prix : {{voy.Prix}} €</p>
                     <div>
-                        <a href="/voyages/{{voy.IDVoyage}}" class="btn btn-info">Détail</a>
+                        <a href="{% url 'voyage' voy.IDVoyage %}" class="btn btn-info">Détail</a>
                         
                         {% if user.is_staff %}
-                            <a href="/voyages/{{voy.IDVoyage}}/update" class="btn btn-warning"><i class="bi bi-pencil-fill"></i> Modifier</a>
-                            <a href="/voyages/{{voy.IDVoyage}}/delete" class="btn btn-danger"><i class="bi bi-trash"></i> Supprimer</a>
-                        {% endif %}
-
-                        {% if user.is_authenticated and not user.is_staff %}
-                            <a href="#" class="btn btn-success">Ajouter au panier</a>
+                            <a href="{% url 'formulaire_modifier_voyage' voy.IDVoyage %}" class="btn btn-warning"><i class="bi bi-pencil-fill" aria-hidden="true"></i> Modifier</a>
+                            <form method="post" action="{% url 'supprimer_voyage' voy.IDVoyage %}" class="d-inline" onsubmit="return confirm('Supprimer le voyage {{ voy.Titre|escapejs }} ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Supprimer</button>
+                            </form>
                         {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+        {% include 'applitravel/pagination.html' with page_obj=voyages %}
 {% endblock%}

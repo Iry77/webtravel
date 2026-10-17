@@ -5,14 +5,18 @@ Les voyages
 {% endblock %}
 
 {% block main %}
-    <h2>Voici les {{villes|length}} villes que vous pouvez visiter</h2>
+        <h2>Voici les {{villes.paginator.count}} villes que vous pouvez visiter</h2>
         <ul>
             {% for vil in villes %}
-                <li>{{vil.IDVille}} {{vil.NomVille}} ({{vil.NomPays}}) |
-                    <a href="{{vil.IDVille}}/update">Modifier</a>
-                    <a href="{% url 'supprimer_ville' vil.IDVille %}">supprimer</a>
+                <li class="mb-2">{{vil.IDVille}} {{vil.NomVille}} ({{vil.NomPays}}) |
+                    <a href="{% url 'formulaire_modifier_ville' vil.IDVille %}">Modifier</a>
+                    <form method="post" action="{% url 'supprimer_ville' vil.IDVille %}" class="d-inline" onsubmit="return confirm('Supprimer la ville {{ vil.NomVille|escapejs }} et toutes ses étapes ?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link p-0 align-baseline text-danger">Supprimer</button>
+                    </form>
                 </li>
             {% endfor %}
         </ul>
+        {% include 'applitravel/pagination.html' with page_obj=villes %}
 {% endblock%}
             

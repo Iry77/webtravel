@@ -6,16 +6,19 @@ Modification d'un voyage
 
 {% block main %}
     <h2>Modification d'un voyage</h2>
-    <form action="/voyages/{{voyage.IDVoyage}}/updated" method="post">
+
+    {% if voyage.image %}
+        <p>Image actuelle :</p>
+        <img src="{{ voyage.image.url }}" class="img-fluid rounded mb-3" style="max-width: 200px;" alt="Image actuelle du voyage {{ voyage.Titre }}">
+    {% endif %}
+
+    <form enctype="multipart/form-data" action="{% url 'modifier_voyage' voyage.IDVoyage %}" method="post">
         {% csrf_token %}
-        <div class="mb-3">
-            <label for="id_voyage" class="form-Label">Nom du voyage</label>
-            <input type="text" name="Titre" class="form_control" maxlength="50" required id="id_nomVoyage" value="{{voyage.Titre}}">
-        </div>
-        <div class="mb-3">
-            <label for="id_prix" class="form-Label">Prix du voyage</label>
-            <input type="text" name="Prix" min="0" step="0.1" class="form_control" required id="id_prix" value="{{voyage.Prix}}">
-        </div>
-        <button type="submit" class="btn-btn-primary">Modifier</button>
+        {{ form.as_p }}
+        <p class="form-text">Laissez le champ « Photo du voyage » vide pour conserver l'image actuelle.</p>
+        <button type="submit" class="btn btn-primary">Modifier</button>
+        <a href="{% url 'voyage' voyage.IDVoyage %}" class="btn btn-secondary">Annuler</a>
     </form>
+
+    
 {% endblock %}
