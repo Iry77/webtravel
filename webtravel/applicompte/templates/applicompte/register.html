@@ -1,0 +1,17 @@
+{% extends 'applitravel/base.html' %}
+
+{% block title %}
+Inscription
+{% endblock %}
+
+{% block main %}
+    <h2>Inscription</h2>
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Créer mon compte</button>
+    </form>
+    <div class="mt-3">
+        <small>Déjà inscrit ? <a href="{% url 'login' %}">Se connecter</a></small>
+    </div>
+{% endblock %}
