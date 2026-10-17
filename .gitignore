@@ -1,2 +1,11 @@
 /env
 /webtravel/db.sqlite3
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+
+# Fichiers statiques collectés et images uploadées (seule l'image par défaut est versionnée)
+/webtravel/staticfiles/
+/webtravel/images/imagesVoyage/*
+!/webtravel/images/imagesVoyage/default.jpg
