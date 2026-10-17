@@ -1,4 +1,5 @@
 /env
+/.venv
 /webtravel/db.sqlite3
 
 # Fichiers Python compilés
