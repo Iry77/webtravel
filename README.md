@@ -1,93 +1,188 @@
-# webtravel
+# WebTravel
 
+Application web d'agence de voyages développée avec **Django**, dans le cadre d'un projet académique (IUT, BUT3).
 
+## Objectif du projet
 
-## Getting started
+WebTravel simule le portail d'une agence de voyages :
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- **Visiteurs et clients** : ils consultent le catalogue des voyages (titre, prix, photo) et le détail de chaque itinéraire, c'est-à-dire les étapes par ville avec le nombre de jours. Un visiteur peut créer un compte client.
+- **Membres du personnel** (`is_staff`) : ils gèrent le catalogue directement depuis l'interface publique. Ils peuvent créer, modifier et supprimer des villes, des voyages (avec leur photo) et les étapes d'un voyage.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Le back-office Django (`/admin/`) reste disponible pour les super-utilisateurs.
 
-## Add your files
+## Technologies
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+| Élément | Version / détail |
+| :--- | :--- |
+| Langage | Python 3.11 ou plus récent |
+| Framework | Django 5.2 |
+| Images | Pillow (requis par `ImageField`) |
+| Base de données | SQLite 3 (fichier `webtravel/db.sqlite3`, non versionné) |
+| Interface | Templates Django, Bootstrap 5.0.2 et Bootstrap Icons (via CDN) |
 
+## Arborescence
+
+```text
+webtravel/                      ← racine du dépôt
+├── README.md
+├── requirements.txt            ← dépendances Python
+├── .gitignore
+└── webtravel/                  ← dossier du projet Django (contient manage.py)
+    ├── manage.py
+    ├── images/imagesVoyage/    ← photos des voyages (MEDIA_ROOT)
+    ├── webtravel/              ← configuration (settings.py, urls.py)
+    ├── applicompte/            ← connexion, déconnexion, inscription, barre de navigation
+    └── applitravel/            ← modèles Ville / Voyage / Etape, vues, templates, CSS
 ```
-cd existing_repo
-git remote add origin https://git.iut-orsay.fr/irabeha/webtravel.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://git.iut-orsay.fr/irabeha/webtravel/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+---
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### 1. Installer Python (s'il n'est pas déjà installé)
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Vérifiez d'abord si Python est présent :
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+python --version      # Windows
+python3 --version     # Linux / macOS
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Si la commande affiche `Python 3.11` ou une version plus récente, passez à l'étape 2. Sinon :
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- **Windows** : téléchargez l'installateur sur <https://www.python.org/downloads/>. Au premier écran, **cochez « Add python.exe to PATH »**, puis cliquez sur « Install Now ». Fermez et rouvrez ensuite le terminal.
+  Autre possibilité : `winget install Python.Python.3.12`
+- **macOS** : téléchargez l'installateur sur <https://www.python.org/downloads/>, ou passez par Homebrew : `brew install python@3.12`
+- **Linux (Debian / Ubuntu)** :
+  ```bash
+  sudo apt update
+  sudo apt install python3 python3-venv python3-pip
+  ```
+- **Linux (Fedora)** : `sudo dnf install python3 python3-pip`
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+> Dans la suite, remplacez `python` par `python3` si vous êtes sous Linux ou macOS.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### 2. Récupérer le projet
 
-## License
-For open source projects, say how it is licensed.
+```bash
+git clone https://git.iut-orsay.fr/irabeha/webtravel.git
+cd webtravel
+```
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### 3. Créer et activer l'environnement virtuel
+
+L'environnement virtuel isole les dépendances du projet de celles du reste du système. Créez-le **à la racine du dépôt** (le dossier qui contient `requirements.txt`) :
+
+```bash
+python -m venv .venv
+```
+
+Puis activez-le :
+
+| Système | Commande d'activation |
+| :--- | :--- |
+| Windows (PowerShell) | `.venv\Scripts\Activate.ps1` |
+| Windows (cmd) | `.venv\Scripts\activate.bat` |
+| Linux / macOS | `source .venv/bin/activate` |
+
+Une fois l'environnement activé, `(.venv)` apparaît au début de l'invite de commande. Pour le désactiver plus tard, tapez `deactivate`.
+
+> **Windows, PowerShell :** si l'activation est refusée avec un message du type « l'exécution de scripts est désactivée », lancez une fois la commande ci-dessous, puis réessayez :
+> `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+
+### 4. Installer les dépendances
+
+L'environnement virtuel doit être activé :
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Pour vérifier l'installation :
+
+```bash
+python -m django --version     # doit afficher 5.2.x
+```
+
+### 5. Préparer la base de données
+
+Les commandes Django se lancent depuis le dossier qui contient `manage.py` :
+
+```bash
+cd webtravel
+```
+
+Le projet lit sa configuration dans des variables d'environnement. En développement, il suffit d'activer le mode debug.
+
+| Système | Commande |
+| :--- | :--- |
+| Windows (PowerShell) | `$env:DJANGO_DEBUG="True"` |
+| Windows (cmd) | `set DJANGO_DEBUG=True` |
+| Linux / macOS | `export DJANGO_DEBUG=True` |
+
+> Cette variable ne vaut que pour le terminal en cours : il faut la redéfinir à chaque nouveau terminal.
+
+Appliquez ensuite les migrations, puis créez un compte administrateur (staff) :
+
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+### 6. Lancer le serveur
+
+```bash
+python manage.py runserver
+```
+
+Ouvrez ensuite <http://127.0.0.1:8000/> dans un navigateur ; la page redirige vers la liste des voyages.
+
+---
+
+## Utilisation
+
+| Page | Adresse | Accès |
+| :--- | :--- | :--- |
+| Liste des voyages | `/voyages/` | Tout le monde |
+| Détail d'un voyage | `/voyages/<id>` | Tout le monde |
+| Connexion | `/login/` | Tout le monde |
+| Inscription | `/register/` | Visiteurs |
+| Liste des villes | `/villes/` | Staff |
+| Créer une ville / un voyage | `/villes/add`, `/voyages/add` | Staff |
+| Back-office Django | `/admin/` | Super-utilisateur |
+
+Un compte créé par `/register/` est un compte **client**. Pour qu'un compte accède aux fonctions de gestion, cochez « Statut équipe » sur cet utilisateur dans `/admin/`.
+
+## Lancer les tests
+
+Depuis le dossier `webtravel/` (celui de `manage.py`), avec l'environnement virtuel activé et `DJANGO_DEBUG=True` :
+
+```bash
+python manage.py test
+```
+
+## Variables d'environnement
+
+| Variable | Rôle | Valeur par défaut |
+| :--- | :--- | :--- |
+| `DJANGO_DEBUG` | `True` pour le développement | `False` |
+| `DJANGO_SECRET_KEY` | Clé secrète Django, **obligatoire** quand `DJANGO_DEBUG` n'est pas à `True` | clé de développement si le debug est activé |
+| `DJANGO_ALLOWED_HOSTS` | Noms d'hôte autorisés, séparés par des virgules | `localhost,127.0.0.1` |
+
+Pour générer une clé secrète :
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+## Problèmes fréquents
+
+| Symptôme | Solution |
+| :--- | :--- |
+| `ImproperlyConfigured: ... DJANGO_SECRET_KEY ...` | Définissez `DJANGO_DEBUG=True` (étape 5) dans le terminal en cours. |
+| `ModuleNotFoundError: No module named 'django'` | L'environnement virtuel n'est pas activé (étape 3), ou les dépendances ne sont pas installées (étape 4). |
+| `python` introuvable sous Windows | Réinstallez Python en cochant « Add python.exe to PATH », ou utilisez la commande `py` à la place de `python`. |
+| Les photos des voyages ne s'affichent pas | Le serveur de développement ne sert les images qu'avec `DJANGO_DEBUG=True`. |
+| `no such table` | Lancez `python manage.py migrate`. |
