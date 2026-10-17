@@ -10,17 +10,16 @@
 		<link rel="stylesheet" href="{% static 'applitravel/css/styles.css' %}">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     </head>
-	<body class="Site">
-		<header>
-			{% if user.is_staff %}
-                {% include 'applicompte/menuStaff.html' %}
-            {% elif user.is_authenticated %}
-                {% include 'applicompte/menuClient.html' %}
-            {% else %}
-                {% include 'applicompte/menuNonConnecte.html' %}
-            {% endif %}
-		</header>
-		<main class="Site-content">
+	<header>
+		{% include 'applicompte/navbar.html' %}
+	</header>
+		<main class="Site-content container py-3">
+			{% for message in messages %}
+			<div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+			</div>
+			{% endfor %}
 			{% block main %} {% endblock %}
 		</main>
 		<footer>
